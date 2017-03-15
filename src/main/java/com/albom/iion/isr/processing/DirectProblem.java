@@ -119,6 +119,14 @@ public class DirectProblem {
 
 	}
 
+	public double spectrum(double ti, double te, double freq) {
+		return spectrum(0, 0, ti, te, 1, false, freq);
+	}
+
+	public double spectrum(double g1, double g2, double ti, double te, double freq) {
+		return spectrum(g1, g2, ti, te, 1, false, freq);
+	}
+
 	public double[] spectrum(double g1, double g2, double ti, double te, double ne, boolean isDeby, double freq[]) {
 		double[] result = new double[freq.length];
 		for (int f = 0; f < freq.length; f++) {
@@ -127,4 +135,22 @@ public class DirectProblem {
 		return result;
 	}
 
+	public double[] spectrum(double ti, double te, double freq[]) {
+		double[] result = new double[freq.length];
+		for (int f = 0; f < freq.length; f++) {
+			result[f] = spectrum(0, 0, ti, te, 1, false, f);
+		}
+		return result;
+	}
+	
+	public double[] spectrum(double g1, double g2, double ti, double te, double freq[]) {
+		double[] result = new double[freq.length];
+		for (int f = 0; f < freq.length; f++) {
+			result[f] = spectrum(g1, g2, ti, te, 1, false, f);
+		}
+		return result;
+	}
+
+
+	
 }
