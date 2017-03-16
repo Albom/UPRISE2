@@ -1,6 +1,7 @@
 package com.albom.iion.isr.processing;
 
 import com.albom.iion.isr.radars.KharkivRadar;
+import com.albom.iion.isr.radars.MillstoneHillRadar;
 import com.albom.physics.Constants;
 import com.albom.physics.IonMass;
 
@@ -19,8 +20,13 @@ public class DirectProblem {
 
 	private static final double[] PHI = calcPhi();
 
+	private int defaultNumberOfHarmonics;
+	private double defaultDeltaF;
+
 	public DirectProblem(double waveLength, double m1, double m2, double m3) {
 		this.waveLength = waveLength;
+		defaultNumberOfHarmonics = estimateNumberOfHarmonics();
+		defaultDeltaF = estimateDeltaF();
 		this.m1 = m1;
 		this.m2 = m2;
 		this.m3 = m3;
@@ -142,7 +148,7 @@ public class DirectProblem {
 		}
 		return result;
 	}
-	
+
 	public double[] spectrum(double g1, double g2, double ti, double te, double freq[]) {
 		double[] result = new double[freq.length];
 		for (int f = 0; f < freq.length; f++) {
@@ -151,6 +157,76 @@ public class DirectProblem {
 		return result;
 	}
 
+	public void acf(double g1, double g2, double ti, double te, double ne, boolean isDeby, int nHarm, double deltaF,
+			double deltaTau, double acf[]) {
+		double[] spectrum = new double[nHarm];
+		double param = 2 * Math.PI * deltaTau * deltaF;
 
-	
+		for (int f = 1; f < nHarm; f++) {
+			spectrum[f] = spectrum(g1, g2, ti, te, ne, isDeby, f * deltaF);
+		}
+		spectrum[0] = spectrum[1];
+
+		for (int j = 0; j < acf.length; j++) {
+			acf[j] = 0;
+			double paramj = param * j;
+			for (int i = 0; i < nHarm - 2; i += 2) {
+				acf[j] += (spectrum[i] * Math.cos(paramj * i) + 4 * spectrum[i + 1] * Math.cos(paramj * (i + 1))
+						+ spectrum[i + 2] * Math.cos(paramj * (i + 2)));
+			}
+		}
+
+		for (int j = acf.length - 1; j > -1; j--) {
+			acf[j] /= acf[0];
+		}
+
+	}
+
+	public void acf(double g1, double g2, double ti, double te, double ne, boolean isDeby, double deltaTau,
+			double acf[]) {
+		acf(g1, g2, ti, te, ne, isDeby, defaultNumberOfHarmonics, defaultDeltaF, deltaTau, acf);
+	}
+
+	public void acf(double g1, double g2, double ti, double te, double deltaTau, double acf[]) {
+		acf(g1, g2, ti, te, 1, false, defaultNumberOfHarmonics, defaultDeltaF, deltaTau, acf);
+	}
+
+	public void acf(double ti, double te, double deltaTau, double acf[]) {
+		acf(0, 0, ti, te, 1, false, defaultNumberOfHarmonics, defaultDeltaF, deltaTau, acf);
+	}
+
+	public double[] acf(double g1, double g2, double ti, double te, double deltaTau, int length) {
+		double[] acf = new double[length];
+		acf(g1, g2, ti, te, 1, false, defaultNumberOfHarmonics, defaultDeltaF, deltaTau, acf);
+		return acf;
+	}
+
+	public double[] acf(double ti, double te, double deltaTau, int length) {
+		double[] acf = new double[length];
+		acf(0, 0, ti, te, 1, false, defaultNumberOfHarmonics, defaultDeltaF, deltaTau, acf);
+		return acf;
+	}
+
+	private int estimateNumberOfHarmonics() {
+
+		if (Math.abs(waveLength - KharkivRadar.WAVE_LENGTH) < 0.1) {
+			return 5000;
+		} else if (Math.abs(waveLength - MillstoneHillRadar.WAVE_LENGTH) < 0.1) {
+			return 600;
+		} else {
+			return 800;
+		}
+	}
+
+	private double estimateDeltaF() {
+
+		if (Math.abs(waveLength - KharkivRadar.WAVE_LENGTH) < 0.1) {
+			return 3;
+		} else if (Math.abs(waveLength - MillstoneHillRadar.WAVE_LENGTH) < 0.1) {
+			return 100;
+		} else {
+			return 50;
+		}
+	}
+
 }
