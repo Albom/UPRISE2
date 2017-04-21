@@ -9,7 +9,7 @@ import com.albom.utils.DataBuffer;
 
 public abstract class CorrFileFS {
 
-	public static void loadFile(CorrFile file, String fileName) {
+	public static void load(CorrFile file, String fileName) {
 
 		try {
 			InputStream input = new FileInputStream(fileName);
@@ -29,8 +29,8 @@ public abstract class CorrFileFS {
 		}
 	}
 
-	public static void loadFile(SNewFile file, String fileName) {
-		loadFile((CorrFile) file, fileName);
+	public static void load(SNewFile file, String fileName) {
+		load((CorrFile) file, fileName);
 	}
 
 }
