@@ -10,6 +10,19 @@ import com.albom.utils.DataBuffer;
 
 public abstract class SNewFileFS {
 
+	public static boolean test(String fileName){
+		long size = 0;
+		try {
+			size = Files.size(Paths.get(fileName));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		if ( (size == 223040) || (size == 223720) )
+			return true;
+		else
+			return false;
+	}
+	
 	public static SNewFile load(String fileName) {
 		SNewFile file = new SNewFile();
 		load(file, fileName);
