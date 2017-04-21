@@ -45,4 +45,17 @@ public abstract class Directory {
 		return result;
 	}
 	
+	public static ArrayList<String> listRecursively(String directory) {
+		ArrayList<String> files = list(directory);
+		ArrayList<String> result = new ArrayList<>();
+		for (String f : files) {
+			Path p = Paths.get(f);
+			if (!Files.isDirectory(p)) {
+				result.add(p.toString());
+			} 
+			else result.addAll(listRecursively(f));
+		}
+		return result;
+	}
+	
 }
