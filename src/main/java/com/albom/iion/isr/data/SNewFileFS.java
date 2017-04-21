@@ -10,13 +10,13 @@ import com.albom.utils.DataBuffer;
 
 public abstract class SNewFileFS {
 
-	public static SNewFile loadFile(String fileName) {
+	public static SNewFile load(String fileName) {
 		SNewFile file = new SNewFile();
-		loadFile(file, fileName);
+		load(file, fileName);
 		return file;
 	}
 	
-	public static void loadFile(SNewFile file, String fileName) {
+	public static void load(SNewFile file, String fileName) {
 
 		byte[] buffer = null;
 
@@ -50,7 +50,7 @@ public abstract class SNewFileFS {
 
 	}
 
-	public static void saveFile(SNewFile file, String fileName) {
+	public static void save(SNewFile file, String fileName) {
 		byte[] buffer = new byte[223060];
 		DataBuffer.setWordBigEndian(buffer, 0, file.getTime().getDayOfMonth());
 		DataBuffer.setWordBigEndian(buffer, 2, file.getTime().getMonthValue());
