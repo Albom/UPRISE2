@@ -32,18 +32,6 @@ public abstract class Directory {
 		return result;
 	}
 
-	public static ArrayList<String> listFileNamesRecursively(String directory) {
-		ArrayList<String> files = list(directory);
-		ArrayList<String> result = new ArrayList<>();
-		for (String f : files) {
-			Path p = Paths.get(f);
-			if (!Files.isDirectory(p)) {
-				result.add(p.getFileName().toString());
-			} 
-			else result.addAll(listFileNamesRecursively(f));
-		}
-		return result;
-	}
 	
 	public static ArrayList<String> listRecursively(String directory) {
 		ArrayList<String> files = list(directory);
