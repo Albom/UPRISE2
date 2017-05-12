@@ -18,6 +18,13 @@ public class DirectProblem {
 	private double memi;
 	private double sqrt_memi;
 
+	// parameters for precalculated cosine table
+	private double deltaF = 0;
+	private double deltaTau = 0;
+	private int acfLength = 0;
+	private int nHarm = 0;
+	private double[][] cos = null;
+
 	private static final double[] PHI = calcPhi();
 
 	private int defaultNumberOfHarmonics;
@@ -160,7 +167,24 @@ public class DirectProblem {
 	public void acf(double g1, double g2, double ti, double te, double ne, boolean isDeby, int nHarm, double deltaF,
 			double deltaTau, double acf[]) {
 		double[] spectrum = new double[nHarm];
-		double param = 2 * Math.PI * deltaTau * deltaF;
+
+		if ((Math.abs(this.deltaTau - deltaTau) > 1.0e-8) || (this.acfLength != acf.length) || (this.nHarm != nHarm)
+				|| (this.deltaF != deltaF)) {
+
+			this.acfLength = acf.length;
+			this.deltaTau = deltaTau;
+			this.deltaF = deltaF;
+			this.nHarm = nHarm;
+
+			cos = new double[this.acfLength][nHarm];
+
+			for (int j = 0; j < this.acfLength; j++) {
+				for (int i = 0; i < nHarm; i++) {
+					cos[j][i] = Math.cos(2 * Math.PI * deltaTau * deltaF * j * i);
+				}
+			}
+
+		}
 
 		for (int f = 1; f < nHarm; f++) {
 			spectrum[f] = spectrum(g1, g2, ti, te, ne, isDeby, f * deltaF);
@@ -169,10 +193,9 @@ public class DirectProblem {
 
 		for (int j = 0; j < acf.length; j++) {
 			acf[j] = 0;
-			double paramj = param * j;
 			for (int i = 0; i < nHarm - 2; i += 2) {
-				acf[j] += (spectrum[i] * Math.cos(paramj * i) + 4 * spectrum[i + 1] * Math.cos(paramj * (i + 1))
-						+ spectrum[i + 2] * Math.cos(paramj * (i + 2)));
+				acf[j] += (spectrum[i] * cos[j][i] + 4 * spectrum[i + 1] * cos[j][i + 1]
+						+ spectrum[i + 2] * cos[j][i + 2]);
 			}
 		}
 
