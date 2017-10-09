@@ -6,9 +6,16 @@ import java.time.ZoneId;
 public abstract class Time {
 
 	public static double toDecimal(String h, String m, String s) {
-		return Double.valueOf(h) + Double.valueOf(m) / 60.0 + Double.valueOf(s) / 3600.0;
+		return toDecimal(Integer.valueOf(h), Integer.valueOf(m), Integer.valueOf(s));
 	}
 
+	public static double toDecimal(LocalDateTime date) {
+		int h = date.getHour();
+		int m = date.getMinute();
+		int s = date.getSecond();
+		return toDecimal(h, m, s);
+	}
+	
 	public static double toDecimal(int h, int m, int s) {
 		return (double) (h) + (double) (m) / 60.0 + (double) (s) / 3600.0;
 	}
