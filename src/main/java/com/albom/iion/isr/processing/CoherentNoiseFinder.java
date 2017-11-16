@@ -1,112 +1,112 @@
 package com.albom.iion.isr.processing;
 
+import java.util.ArrayList;
+
+import com.albom.iion.isr.data.Point;
+
 public class CoherentNoiseFinder {
 
 	private static final int WINDOW_WIDTH_DEFAULT = 15;
-	private static final float LEVEL_DEFAULT = 5.0f;
-	private static final boolean DIRECTION_DEFAULT = true;
+	private static final double LEVEL_DEFAULT = 5.0;
 
 	private int windowWidth;
-	private float level;
-	private boolean direction;
+	private double level;
 
 	public CoherentNoiseFinder() {
-		this(CoherentNoiseFinder.WINDOW_WIDTH_DEFAULT, CoherentNoiseFinder.LEVEL_DEFAULT,
-				CoherentNoiseFinder.DIRECTION_DEFAULT);
+		this(CoherentNoiseFinder.WINDOW_WIDTH_DEFAULT, CoherentNoiseFinder.LEVEL_DEFAULT);
 	}
 
-	public CoherentNoiseFinder(int windowWidth, float level, boolean direction) {
+	public CoherentNoiseFinder(int windowWidth, double level) {
 		this.windowWidth = windowWidth;
 		this.level = level;
-		this.direction = direction;
 	}
 
-	public boolean[] find(float[] data, boolean[] labels) {
-		if (direction)
-			return findForward(data, labels);
-		else
-			return findBack(data);
+	public ArrayList<Boolean> find(ArrayList<Point> data) {
+		int length = data.size();
+		ArrayList<Boolean> labels = new ArrayList<>(length);
+		for (int i = 0; i < length; i++) {
+			labels.add(false);
+		}
+		findForward(data, labels);
+		findBack(data, labels);
+		return labels;
 	}
 
-	public boolean[] find(float[] data) {
-		if (direction)
-			return findForward(data);
-		else
-			return findBack(data);
+	public void find(ArrayList<Point> data, ArrayList<Boolean> labels) {
+		findForward(data, labels);
+		findBack(data, labels);
 	}
 
-	private boolean[] findForward(float[] data) {
-		boolean[] labels = new boolean[data.length];
-		return findForward(data, labels);
+	public void find(ArrayList<Point> data, ArrayList<Boolean> labels, boolean forward) {
+		if (forward) {
+			findForward(data, labels);
+		} else {
+			findBack(data, labels);
+		}
 	}
 
-	private boolean[] findForward(float[] data, boolean[] labels) {
-		for (int t = 0; t < data.length - windowWidth - 1; t++) {
+	private void findForward(ArrayList<Point> data, ArrayList<Boolean> labels) {
+		int length = data.size();
+		for (int t = 0; t < length - windowWidth - 1; t++) {
 
 			int num = 0;
 			double mean = 0;
 			for (int offset = 0; offset < windowWidth; offset++) {
-				if (!labels[t + offset]) {
-					mean += data[t + offset];
+				if (!labels.get(t + offset)) {
+					mean += data.get(t + offset).getValue();
 					num++;
 				}
 			}
 
-			if (num > 9) { // TODO change 9 to something else
+			if (num > windowWidth / 2) {
 				mean /= num;
 
 				double dev = 0;
 				for (int offset = 0; offset < windowWidth; offset++) {
-					if (!labels[t + offset]) {
-						dev += Math.pow(data[t + offset] - mean, 2);
+					if (!labels.get(t + offset)) {
+						dev += Math.pow(data.get(t + offset).getValue() - mean, 2);
 					}
 				}
-				dev /= Math.sqrt(dev / (num - 1));
+				dev = Math.sqrt(dev / (num - 1));
 
-				if (Math.abs(data[t + windowWidth] - mean) > level * dev) {
-					labels[t + windowWidth] = true;
+				if (Math.abs(data.get(t + windowWidth).getValue() - mean) > level * dev) {
+					labels.set(t + windowWidth, true);
 				}
 
 			}
 		}
-		return labels;
 	}
 
-	private boolean[] findBack(float[] data) {
-		boolean[] labels = new boolean[data.length];
-		return findBack(data, labels);
-	}
-
-	private boolean[] findBack(float[] data, boolean labels[]) {
-		for (int t = data.length - windowWidth - 1; t > 0; t--) {
+	private void findBack(ArrayList<Point> data, ArrayList<Boolean> labels) {
+		int length = data.size();
+		for (int t = length - windowWidth - 1; t > 0; t--) {
 			int num = 0;
 			double mean = 0;
 			for (int offset = 0; offset < windowWidth; offset++) {
-				if (!labels[t + offset]) {
-					mean += data[t + offset];
+				if (!labels.get(t + offset)) {
+					mean += data.get(t + offset).getValue();
 					num++;
 				}
 			}
 
-			if (num > 9) { // TODO change 9 to something else
+			if (num > windowWidth / 2) {
 				mean /= num;
 
 				double dev = 0;
 				for (int offset = 0; offset < windowWidth; offset++) {
-					if (!labels[t + offset]) {
-						dev += Math.pow(data[t + offset] - mean, 2);
+					if (!labels.get(t + offset)) {
+						dev += Math.pow(data.get(t + offset).getValue() - mean, 2);
 					}
 				}
-				dev /= Math.sqrt(dev / (num - 1));
+				dev = Math.sqrt(dev / (num - 1));
 
-				if (Math.abs(data[t - 1] - mean) > level * dev) {
-					labels[t - 1] = true;
+				if (Math.abs(data.get(t - 1).getValue() - mean) > level * dev) {
+					labels.set(t - 1, true);
 				}
 
 			}
 
 		}
-		return labels;
 	}
 
 }
