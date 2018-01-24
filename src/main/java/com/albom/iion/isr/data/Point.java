@@ -2,6 +2,8 @@ package com.albom.iion.isr.data;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class Point {
 	private LocalDateTime date;
@@ -10,10 +12,10 @@ public class Point {
 	private double value;
 
 	public Point(LocalDateTime date, int alt, int lag, double value) {
-		this.setDate(date);
-		this.setAlt(alt);
-		this.setLag(lag);
-		this.setValue(value);
+		this.date = date;
+		this.alt = alt;
+		this.lag = lag;
+		this.value = value;
 	}
 
 	/**
@@ -80,23 +82,19 @@ public class Point {
 		this.lag = lag;
 	}
 
-	public static ArrayList<Double> getValues(ArrayList<Point> points){
-		ArrayList<Double> values = new ArrayList<>(points.size());
-		for (Point p : points) {
-			values.add(p.getValue());
-		}
-		return values;
+	public static List<Double> getValues(ArrayList<Point> points){
+		return points.stream()
+				.map(Point::getValue)
+				.collect(Collectors.toList());
 	}
 
-	public static ArrayList<LocalDateTime> getDates(ArrayList<Point> points){
-		ArrayList<LocalDateTime> dates = new ArrayList<>(points.size());
-		for (Point p : points) {
-			dates.add(p.getDate());
-		}
-		return dates;
+	public static List<LocalDateTime> getDates(List<Point> points){
+		return points.stream()
+				.map(Point::getDate)
+				.collect(Collectors.toList());
 	}
 	
-	public static void setValues(ArrayList<Point> points, ArrayList<Double> values){
+	public static void setValues(List<Point> points, List<Double> values){
 		int length = points.size();
 		for (int i = 0; i < length; i++) {
 			points.get(i).setValue(values.get(i));
