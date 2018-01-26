@@ -31,5 +31,5 @@ public class CorrFile {
 	public void setTime(LocalDateTime time) {
 		this.time = time;
 	}
-	
+
 }

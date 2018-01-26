@@ -1,4 +1,4 @@
-package com.albom.iion.isr.data;
+package com.albom.iion.isr.data.kharkiv;
 
 import java.io.BufferedReader;
 import java.io.IOException;
