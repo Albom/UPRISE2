@@ -5,7 +5,7 @@ import com.albom.iion.isr.radars.MillstoneHillRadar;
 import com.albom.physics.Constants;
 import com.albom.physics.IonMass;
 
-public class DirectProblem {
+public class ForwardProblem {
 
 	private double waveLength;
 	private double m1, m2, m3;
@@ -30,7 +30,7 @@ public class DirectProblem {
 	private int defaultNumberOfHarmonics;
 	private double defaultDeltaF;
 
-	public DirectProblem(double waveLength, double m1, double m2, double m3) {
+	public ForwardProblem(double waveLength, double m1, double m2, double m3) {
 		this.waveLength = waveLength;
 		defaultNumberOfHarmonics = estimateNumberOfHarmonics();
 		defaultDeltaF = estimateDeltaF();
@@ -47,15 +47,15 @@ public class DirectProblem {
 		sqrt_memi = Math.sqrt(memi);
 	}
 
-	public DirectProblem(double waveLength) {
+	public ForwardProblem(double waveLength) {
 		this(waveLength, IonMass.HYDROGEN, IonMass.HELIUM, IonMass.OXYGEN);
 	}
 
-	public DirectProblem() {
+	public ForwardProblem() {
 		this(KharkivRadar.WAVE_LENGTH, IonMass.HYDROGEN, IonMass.HELIUM, IonMass.OXYGEN);
 	}
 
-	public DirectProblem(double m1, double m2, double m3) {
+	public ForwardProblem(double m1, double m2, double m3) {
 		this.waveLength = KharkivRadar.WAVE_LENGTH;
 		this.m1 = m1;
 		this.m2 = m2;

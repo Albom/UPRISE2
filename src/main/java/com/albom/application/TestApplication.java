@@ -17,7 +17,7 @@ import com.albom.iion.isr.data.CorrFileFS;
 import com.albom.iion.isr.data.kharkiv.ASFile;
 import com.albom.iion.isr.data.kharkiv.SNewFile;
 import com.albom.iion.isr.data.kharkiv.SNewFileFS;
-import com.albom.iion.isr.processing.DirectProblem;
+import com.albom.iion.isr.processing.ForwardProblem;
 import com.albom.iion.isr.processing.TimeSorter;
 import com.albom.utils.Directory;
 import com.albom.utils.Time;
@@ -104,7 +104,7 @@ public class TestApplication {
 		// System.out.println( Arrays.toString( Time.diff(t) ) );
 		// System.out.println( Arrays.toString( Time.diff(r) ) );
 
-		DirectProblem d = new DirectProblem();
+		ForwardProblem d = new ForwardProblem();
 		LocalDateTime start = LocalDateTime.now();
 
 		double[] acf = new double[19];
