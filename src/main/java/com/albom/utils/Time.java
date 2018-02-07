@@ -2,6 +2,7 @@ package com.albom.utils;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 
 public abstract class Time {
 
@@ -46,5 +47,15 @@ public abstract class Time {
 		ZoneId zoneId = ZoneId.systemDefault();
 		return end.atZone(zoneId).toEpochSecond() - start.atZone(zoneId).toEpochSecond();
 	}
-
+	
+	public static LocalDateTime getStartHour(LocalDateTime oldTime){
+		LocalDateTime newTime = LocalDateTime.from(oldTime);
+		newTime = newTime.truncatedTo(ChronoUnit.HOURS);
+		return newTime;
+	}
+	
+	public static LocalDateTime getEndHour(LocalDateTime oldTime){
+		return getStartHour(oldTime).plusHours(1);
+	}
+	
 }
