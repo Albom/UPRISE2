@@ -45,10 +45,7 @@ public class MuApplication {
 		String step1 = "step1";
 		project.createTable(step1);
 		ProjectFS projectFS = new ProjectFS(project, step1);
-		// projectFS.load("d:\\Programs\\wget\\www2.rish.kyoto-u.ac.jp\\~hasiguti\\kotov\\MI2972\\");
-		projectFS.load("d:\\Programs\\wget\\www2.rish.kyoto-u.ac.jp\\~hasiguti\\kotov\\MI2973\\");
-		// System.out.println(projectFS.load("d:\\test"));
-
+		projectFS.load("d:\\test");
 	}
 
 	private void temporal(ProjectDB project) {
