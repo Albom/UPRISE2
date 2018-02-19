@@ -88,11 +88,6 @@ public class MuApplication {
 		if (project == null) {
 			System.exit(-1);
 		}
-
-		System.out.println(project.checkTable("step1"));
-		System.out.println(project.checkTable("step2"));
-		System.out.println(project.checkTable("step3"));
-		System.out.println(project.checkTable("step4"));
 		
 		load(Paths.get("d:/test"));
 		temporal();

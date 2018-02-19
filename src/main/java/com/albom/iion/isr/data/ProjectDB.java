@@ -13,12 +13,57 @@ import java.util.List;
 public class ProjectDB {
 
 	private Connection connection = null;
+	private final String properties = "properties";
 
 	public ProjectDB(Connection connection) {
 		this.connection = connection;
+		createProperties();
 	}
 
-	public boolean checkTable(String table){
+	private void createProperties() {
+		try {
+			Statement statement = connection.createStatement();
+			statement
+					.execute("CREATE TABLE IF NOT EXISTS " + properties + " (name VARCHAR PRIMARY KEY, value VARCHAR);");
+			statement.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void setProperty(String name, String value) {
+		try {
+
+			PreparedStatement statement = connection
+					.prepareStatement("INSERT INTO " + properties + " (name, value) VALUES (?, ?);");
+
+			statement.setString(1, name);
+			statement.setString(2, value);
+
+			statement.execute();
+			statement.close();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public String getProperty(String name) {
+		String value = null;
+		try {
+			PreparedStatement statement = connection
+					.prepareStatement("SELECT value FROM " + properties + " WHERE name=?;");
+			statement.setString(1, name);
+			ResultSet result = statement.executeQuery();
+			result.next();
+			value = result.getString(1);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return value;
+	}
+
+	public boolean checkTable(String table) {
 		int num = 0;
 		try {
 			PreparedStatement statement = connection
@@ -32,13 +77,14 @@ public class ProjectDB {
 		}
 		return num > 0;
 	}
-	
+
 	public void createTable(String table) {
 
 		try {
 			Statement statement = connection.createStatement();
 			statement.execute("CREATE TABLE IF NOT EXISTS " + table
 					+ " (id INTEGER PRIMARY KEY AUTOINCREMENT, time DATETIME, alt INT, lag INT, value DOUBLE);");
+			statement.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

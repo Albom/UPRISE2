@@ -1,7 +1,6 @@
 package com.albom.iion.isr.data.mu;
 
 import java.nio.file.Path;
-import java.util.LinkedList;
 import java.util.List;
 
 import com.albom.iion.isr.data.Point;
@@ -18,24 +17,46 @@ public class MuProjectFS extends ProjectFS {
 		super(project, table);
 	}
 
+	private boolean readProperties(String fileName) {
+
+		MuSession test = MuSessionFS.load(fileName, 0);
+		if (test == null) {
+			return false;
+		}
+
+		if (!project.checkTable("properties")) {
+			return false;
+		}
+
+		MuHeader header = test.getHead();
+
+		project.setProperty("nh", String.valueOf(header.getNhigh()));
+		project.setProperty("start", String.valueOf(header.getJstart()));
+		project.setProperty("sampling", String.valueOf(header.getJsint()));
+		project.setProperty("zenith", String.valueOf(new MuDirection(header.getIbeam()[0]).getZenith()));
+
+		return true;
+	}
+
 	@Override
 	public int load(Path dir) {
 		int result = 0;
 		List<String> list = Directory.list(dir.toString());
+		readProperties(list.get(0));
 		for (String name : list) {
-			System.out.println(name);
+			System.out.println(name); /*
 			int i = 0;
 			MuSession s = null;
 			project.begin();
 			while ((s = MuSessionFS.load(name, i)) != null) {
-				LinkedList<Point> points = Acf.calc(s);
+				List<Point> points = Acf.calc(s);
 				for (Point p : points) {
 					project.insert(table, p);
 					result++;
 				}
 				i++;
 			}
-			project.commit();
+			project.commit(); */
 		}
 		return result;
 	}
