@@ -17,6 +17,21 @@ public class ProjectDB {
 		this.connection = connection;
 	}
 
+	public boolean checkTable(String table){
+		int num = 0;
+		try {
+			PreparedStatement statement = connection
+					.prepareStatement("SELECT count(*) FROM sqlite_master WHERE type='table' AND name=?;");
+			statement.setString(1, table);
+			ResultSet result = statement.executeQuery();
+			result.next();
+			num = result.getInt(1);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return num > 0;
+	}
+	
 	public void createTable(String table) {
 
 		try {
