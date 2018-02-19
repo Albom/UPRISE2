@@ -49,7 +49,7 @@ public class CoherentNoiseFinder {
 	 * @return Returns collection of labels.
 	 */
 	public List<Boolean> find(List<Point> data) {
-		List<Boolean> labels = new ArrayList<>();
+		List<Boolean> labels = new ArrayList<Boolean>(Collections.nCopies(data.size(), false));
 		Collections.fill(labels, false);
 		find(data, labels);
 
