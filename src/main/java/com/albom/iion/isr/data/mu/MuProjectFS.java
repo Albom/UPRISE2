@@ -1,8 +1,8 @@
 package com.albom.iion.isr.data.mu;
 
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 
 import com.albom.iion.isr.data.Point;
 import com.albom.iion.isr.data.ProjectDB;
@@ -21,7 +21,7 @@ public class MuProjectFS extends ProjectFS {
 	@Override
 	public int load(Path dir) {
 		int result = 0;
-		ArrayList<String> list = Directory.list(dir.toString());
+		List<String> list = Directory.list(dir.toString());
 		for (String name : list) {
 			System.out.println(name);
 			int i = 0;

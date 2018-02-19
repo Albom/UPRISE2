@@ -8,6 +8,7 @@ import java.sql.Statement;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 
 public class ProjectDB {
 
@@ -97,8 +98,8 @@ public class ProjectDB {
 
 	}
 
-	public ArrayList<LocalDateTime> getDates(String table, int lag) {
-		ArrayList<LocalDateTime> dates = new ArrayList<>();
+	public List<LocalDateTime> getDates(String table, int lag) {
+		List<LocalDateTime> dates = new ArrayList<>();
 
 		try {
 			PreparedStatement statement = connection
@@ -116,8 +117,8 @@ public class ProjectDB {
 		return dates;
 	}
 
-	public ArrayList<Point> getTimeDependency(String table, int alt, int lag) {
-		ArrayList<Point> points = new ArrayList<>();
+	public List<Point> getTimeDependency(String table, int alt, int lag) {
+		List<Point> points = new ArrayList<>();
 
 		try {
 			PreparedStatement statement = connection
@@ -137,8 +138,8 @@ public class ProjectDB {
 		return points;
 	}
 
-	public ArrayList<Point> getHeightDependency(String table, LocalDateTime time, int lag) {
-		ArrayList<Point> points = new ArrayList<>();
+	public List<Point> getHeightDependency(String table, LocalDateTime time, int lag) {
+		List<Point> points = new ArrayList<>();
 
 		try {
 			PreparedStatement statement = connection

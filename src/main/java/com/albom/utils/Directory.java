@@ -6,11 +6,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.List;
 
 public abstract class Directory {
 
-	public static ArrayList<String> list(String directory) {
-		ArrayList<String> fileNames = new ArrayList<>();
+	public static List<String> list(String directory) {
+		List<String> fileNames = new ArrayList<>();
 		try (DirectoryStream<Path> directoryStream = Files.newDirectoryStream(Paths.get(directory))) {
 			for (Path path : directoryStream) {
 				fileNames.add(path.toString());
@@ -20,9 +21,9 @@ public abstract class Directory {
 		return fileNames;
 	}
 
-	public static ArrayList<String> listFileNames(String directory) {
-		ArrayList<String> files = list(directory);
-		ArrayList<String> result = new ArrayList<>();
+	public static List<String> listFileNames(String directory) {
+		List<String> files = list(directory);
+		List<String> result = new ArrayList<>();
 		for (String f : files) {
 			Path p = Paths.get(f);
 			if (!Files.isDirectory(p)) {
@@ -33,9 +34,9 @@ public abstract class Directory {
 	}
 
 	
-	public static ArrayList<String> listRecursively(String directory) {
-		ArrayList<String> files = list(directory);
-		ArrayList<String> result = new ArrayList<>();
+	public static List<String> listRecursively(String directory) {
+		List<String> files = list(directory);
+		List<String> result = new ArrayList<>();
 		for (String f : files) {
 			Path p = Paths.get(f);
 			if (!Files.isDirectory(p)) {
