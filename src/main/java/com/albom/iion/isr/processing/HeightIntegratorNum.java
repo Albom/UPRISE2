@@ -2,6 +2,7 @@ package com.albom.iion.isr.processing;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 
 import com.albom.iion.isr.data.Point;
 
@@ -13,7 +14,7 @@ public class HeightIntegratorNum {
 		this.num = num;
 	}
 
-	public ArrayList<Point> integrate(ArrayList<Point> data) {
+	public ArrayList<Point> integrate(List<Point> data) {
 		int length = data.size();
 		ArrayList<Point> result = new ArrayList<>();
 		if (length == 0) {
