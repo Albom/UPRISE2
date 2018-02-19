@@ -14,33 +14,30 @@ import com.albom.utils.Directory;
 
 public class MuProjectFS extends ProjectFS {
 
-		public MuProjectFS(ProjectDB project, String table) {
+	public MuProjectFS(ProjectDB project, String table) {
 		super(project, table);
 	}
 
-		@Override
-		public int load(Path dir) {
-			int result = 0;
-			ArrayList<String> list = Directory.list(dir.toString());
-			for (String name : list) {
-				System.out.println(name);
-				int i = 0;
-				MuSession s = null;
-				project.begin();
-				while ((s = MuSessionFS.load(name, i)) != null) {
-					LinkedList<Point> points = Acf.calc(s);
-					for (Point p : points) {
-						project.insert(table, p);
-						result++;
-					}
-					i++;
+	@Override
+	public int load(Path dir) {
+		int result = 0;
+		ArrayList<String> list = Directory.list(dir.toString());
+		for (String name : list) {
+			System.out.println(name);
+			int i = 0;
+			MuSession s = null;
+			project.begin();
+			while ((s = MuSessionFS.load(name, i)) != null) {
+				LinkedList<Point> points = Acf.calc(s);
+				for (Point p : points) {
+					project.insert(table, p);
+					result++;
 				}
-				project.commit();
+				i++;
 			}
-			return result;
+			project.commit();
 		}
+		return result;
+	}
 
-
-
-	
 }
