@@ -1,5 +1,7 @@
 package com.albom.application;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -7,6 +9,7 @@ import com.albom.iion.isr.data.Point;
 import com.albom.iion.isr.data.ProjectDB;
 import com.albom.iion.isr.data.ProjectFS;
 import com.albom.iion.isr.data.ProjectFactory;
+import com.albom.iion.isr.data.mu.MuProjectFS;
 import com.albom.iion.isr.processing.CoherentNoiseFinder;
 import com.albom.iion.isr.processing.HeightIntegratorNum;
 import com.albom.iion.isr.processing.TimeIntegratorSlide;
@@ -24,9 +27,9 @@ public class MuApplication {
 	
 	private ProjectDB project;
 	
-	private void load(String directory) {
+	private void load(Path directory) {
 		project.createTable(step1);
-		ProjectFS projectFS = new ProjectFS(project, step1);
+		ProjectFS projectFS = new MuProjectFS(project, step1);
 		projectFS.load(directory);
 	}
 
@@ -86,7 +89,7 @@ public class MuApplication {
 			System.exit(-1);
 		}
 
-		load("d:/test");
+//		load(Paths.get("d:/test"));
 		temporal();
 		altitudinal();
 

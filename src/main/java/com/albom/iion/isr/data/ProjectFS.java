@@ -1,28 +1,27 @@
 package com.albom.iion.isr.data;
 
-import java.util.ArrayList;
-
-import com.albom.utils.Directory;
+import java.nio.file.Path;
 
 public class ProjectFS {
 
-	private ProjectDB project;
-	private String table;
-	
+	protected ProjectDB project;
+	protected String table;
+
 	public ProjectFS(ProjectDB project, String table){
 		this.project = project;
 		this.table = table;
 	}
 	
-	public int load(String dir){
-		int result = 0;
-		ArrayList<String> list = Directory.list(dir);
-		for ( String name : list ){
-			project.begin();
-			// TODO loading each file in the directory
-			project.commit();
-		}
-	return result;
+	public int load(Path dir){
+	return 0;
 	}
+
+	/**
+	 * @return the project DB
+	 */
+	public ProjectDB getProjectDB() {
+		return project;
+	}
+
 	
 }
