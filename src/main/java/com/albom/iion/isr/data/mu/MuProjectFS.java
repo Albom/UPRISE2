@@ -44,7 +44,7 @@ public class MuProjectFS extends ProjectFS {
 		List<String> list = Directory.list(dir.toString());
 		readProperties(list.get(0));
 		for (String name : list) {
-			System.out.println(name); /*
+			System.out.println(name); 
 			int i = 0;
 			MuSession s = null;
 			project.begin();
@@ -56,7 +56,7 @@ public class MuProjectFS extends ProjectFS {
 				}
 				i++;
 			}
-			project.commit(); */
+			project.commit(); 
 		}
 		return result;
 	}

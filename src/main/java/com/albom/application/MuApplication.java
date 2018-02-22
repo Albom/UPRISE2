@@ -17,9 +17,10 @@ import com.albom.iion.isr.processing.TimeIntegratorSlide;
 
 public class MuApplication {
 
-	private int start = 1333; // head.getJstart()
-	private int sampling = 32; // head.getJsint()
-	private int zenith = 20; // new MuDirection(head.getIbeam()[0]).getZenith()
+	private int start;
+	private int sampling;
+	private int zenith;
+	private int nH;
 	
 	private final String step1 = "step1";
 	private final String step2 = "step2";
@@ -90,6 +91,14 @@ public class MuApplication {
 		}
 		
 		load(Paths.get("d:/test"));
+		
+		start = Integer.valueOf(project.getProperty("start"));
+		sampling = Integer.valueOf(project.getProperty("sampling"));
+		zenith = Integer.valueOf(project.getProperty("zenith"));
+		nH = Integer.valueOf(project.getProperty("nh"));
+		
+		System.out.println(start + "\t" + sampling + "\t" + zenith + "\t" + nH);
+		
 		temporal();
 		altitudinal();
 
