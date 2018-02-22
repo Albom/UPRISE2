@@ -43,7 +43,7 @@ public class MuApplication {
 		
 		for (int lag = 0; lag <= 6; lag++) {
 
-			for (int h = 0; h < 256; h++) {
+			for (int h = 0; h < nH; h++) {
 
 				List<Point> points = project.getTimeDependency(step1, h, lag);
 				List<Boolean> labels = finder.find(points);
