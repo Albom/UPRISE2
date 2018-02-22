@@ -13,8 +13,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 
-import com.albom.iion.isr.data.CorrFileFS;
 import com.albom.iion.isr.data.kharkiv.ASFile;
+import com.albom.iion.isr.data.kharkiv.CorrFileFS;
 import com.albom.iion.isr.data.kharkiv.SNewFile;
 import com.albom.iion.isr.data.kharkiv.SNewFileFS;
 import com.albom.iion.isr.processing.ForwardProblem;
