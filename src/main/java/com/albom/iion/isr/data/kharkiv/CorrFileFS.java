@@ -1,12 +1,10 @@
-package com.albom.iion.isr.data;
+package com.albom.iion.isr.data.kharkiv;
 
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDateTime;
 
-import com.albom.iion.isr.data.kharkiv.SNewFile;
-import com.albom.iion.isr.data.kharkiv.SNewFileFS;
 import com.albom.utils.DataBuffer;
 
 public abstract class CorrFileFS {
