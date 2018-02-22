@@ -30,6 +30,7 @@ public class MuProjectFS extends ProjectFS {
 
 		MuHeader header = test.getHead();
 
+		project.setProperty("nlag", "7");
 		project.setProperty("nh", String.valueOf(header.getNhigh()));
 		project.setProperty("start", String.valueOf(header.getJstart()));
 		project.setProperty("sampling", String.valueOf(header.getJsint()));

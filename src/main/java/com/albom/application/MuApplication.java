@@ -21,6 +21,7 @@ public class MuApplication {
 	private int sampling;
 	private int zenith;
 	private int nH;
+	private int nLag;
 	
 	private final String step1 = "step1";
 	private final String step2 = "step2";
@@ -41,7 +42,7 @@ public class MuApplication {
 		CoherentNoiseFinder finder = new CoherentNoiseFinder(20, 4);
 		TimeIntegratorSlide integrator = new TimeIntegratorSlide(20 * 60, 10 * 60);
 		
-		for (int lag = 0; lag <= 6; lag++) {
+		for (int lag = 0; lag < nLag; lag++) {
 
 			for (int h = 0; h < nH; h++) {
 
@@ -63,7 +64,7 @@ public class MuApplication {
 
 		project.createTable(step3);
 
-		for (int lag = 0; lag <= 6; lag++) {
+		for (int lag = 0; lag < nLag; lag++) {
 
 			List<LocalDateTime> dates = project.getDates(step2, lag);
 
@@ -96,6 +97,7 @@ public class MuApplication {
 		sampling = Integer.valueOf(project.getProperty("sampling"));
 		zenith = Integer.valueOf(project.getProperty("zenith"));
 		nH = Integer.valueOf(project.getProperty("nh"));
+		nLag = Integer.valueOf(project.getProperty("nlag"));
 		
 		System.out.println(start + "\t" + sampling + "\t" + zenith + "\t" + nH);
 		
