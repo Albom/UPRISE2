@@ -17,7 +17,7 @@ public class TimeIntegratorPoints {
 
 	public List<Point> integrate(List<Point> data, List<Boolean> labels) {
 		int length = data.size();
-		ArrayList<Point> result = new ArrayList<>();
+		List<Point> result = new ArrayList<>();
 
 		if (length == 0) {
 			return result;

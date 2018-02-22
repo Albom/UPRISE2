@@ -14,9 +14,9 @@ public class HeightIntegratorNum {
 		this.num = num;
 	}
 
-	public ArrayList<Point> integrate(List<Point> data) {
+	public List<Point> integrate(List<Point> data) {
 		int length = data.size();
-		ArrayList<Point> result = new ArrayList<>();
+		List<Point> result = new ArrayList<>();
 		if (length == 0) {
 			return result;
 		}

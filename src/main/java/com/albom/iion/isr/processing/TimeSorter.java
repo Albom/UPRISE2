@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
+import java.util.List;
 
 public class TimeSorter {
 
@@ -25,7 +26,7 @@ public class TimeSorter {
 		if ((in == null) || (in.length == 0)) {
 			return null;
 		}
-		ArrayList<LocalDateTime> dates = new ArrayList<LocalDateTime>(Arrays.asList(in));
+		List<LocalDateTime> dates = new ArrayList<LocalDateTime>(Arrays.asList(in));
 		Collections.sort(dates);
 		LinkedList<LocalDateTime> out = new LinkedList<LocalDateTime>();
 		out.add(dates.get(0));
