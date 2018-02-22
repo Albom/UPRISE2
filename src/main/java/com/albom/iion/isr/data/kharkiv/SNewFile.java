@@ -2,8 +2,6 @@ package com.albom.iion.isr.data.kharkiv;
 
 import java.util.Arrays;
 
-import com.albom.iion.isr.data.CorrFile;
-
 public class SNewFile extends CorrFile implements java.io.Serializable, SNewFileConfiguration {
 
 	/**
