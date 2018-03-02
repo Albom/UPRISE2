@@ -36,7 +36,6 @@ public class Acf {
 				biasIm += im[t];
 			}
 			points.add(new Point(date, h, 0, powerRe - biasRe * biasRe / nT + powerIm - biasIm * biasIm / nT));
-//			points.add(new Point(date, h, 0, powerRe + powerIm)); 
 		}
 		return points;
 	}
@@ -85,11 +84,6 @@ public class Acf {
 					points.add(new Point(date, altitude, tau,
 							acfRe - biasRe * biasReTau / nT + acfIm - biasIm * biasImTau / nT));
 				}
-
-//				if ((altitude >= 0) && (altitude < nH)) { 
-//					points.add(new Point(date, altitude, tau,
-//							acfRe  + acfIm ));
-//				}
 
 			}
 		}
