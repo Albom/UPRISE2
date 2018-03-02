@@ -205,4 +205,24 @@ public class ProjectDB {
 		return points;
 	}
 
+	public List<Point> getAcf(String table, LocalDateTime time, int alt) {
+		List<Point> points = new ArrayList<>();
+
+		try {
+			PreparedStatement statement = connection
+					.prepareStatement("SELECT lag, value FROM " + table + " WHERE time = ? AND alt = ? ORDER BY lag;");
+			statement.setTimestamp(1, Timestamp.valueOf(time));
+			statement.setInt(2, alt);
+			ResultSet result = statement.executeQuery();
+			while (result.next()) {
+				int lag = result.getInt(1);
+				double value = result.getDouble(2);
+				points.add(new Point(time, alt, lag, value));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return points;
+	}
 }
