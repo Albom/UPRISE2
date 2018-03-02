@@ -3,6 +3,7 @@ package com.albom.application;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 
 import com.albom.iion.isr.data.Point;
@@ -11,8 +12,12 @@ import com.albom.iion.isr.data.ProjectFS;
 import com.albom.iion.isr.data.ProjectFactory;
 import com.albom.iion.isr.data.mu.MuProjectFS;
 import com.albom.iion.isr.processing.CoherentNoiseFinder;
+import com.albom.iion.isr.processing.ForwardProblem;
 import com.albom.iion.isr.processing.HeightIntegratorNum;
 import com.albom.iion.isr.processing.TimeIntegratorSlide;
+import com.albom.iion.isr.processing.mu.Altitude;
+import com.albom.iion.isr.radars.MURadar;
+import com.albom.physics.UnitPrefix;
 
 public class MuApplication {
 
@@ -81,6 +86,62 @@ public class MuApplication {
 		}
 	}
 
+	private double[] acfToArray(List<Point> points) {
+		double[] acf = new double[points.size() + 1];
+		for (Point p : points) {
+			acf[p.getLag()] = p.getValue();
+		}
+		return acf;
+	}
+
+	private void inverse() {
+
+		ForwardProblem forward = new ForwardProblem(MURadar.WAVE_LENGTH);
+		double[] acfTheor = new double[7];
+		double deltaTau = UnitPrefix.micro(MURadar.DISTANCE_BETWEEN_PULSES);
+		
+		// System.out.println(Arrays.toString(acfTheor));
+
+		List<LocalDateTime> dates = project.getDates(step3, 1);
+		for (LocalDateTime date : dates) {
+			for (int h = 0; h < nH; h++) {
+				double altitude = Altitude.getAbsolute(h, start, sampling, zenith);
+				if ((altitude > 200) && (altitude < 300)) {
+					List<Point> points = project.getAcf(step3, date, h);
+					double[] acf = acfToArray(points);
+					// System.out.println(Arrays.toString(acf).replaceAll("\\[",
+					// "").replaceAll("]", "").replaceAll(", ", "\t"));
+
+					double tiEstimated = 0, teEstimated = 0;
+					
+					double deltaMin = Double.MAX_VALUE;
+					for (acf[0] = acf[1]; acf[0] < acf[1] * 1.1; acf[0] *= 1.005) {
+						// System.out.println(Arrays.toString(acf).replaceAll("\\[",
+						// "").replaceAll("]", "").replaceAll(", ", "\t"));
+						for (double ti = 500; ti < 2000; ti += 100) {
+							for (double te = ti; te < 2000; te += 100) {
+								forward.acf(ti, te, deltaTau, acfTheor);
+								double d = 0;
+								for (int lag = 1; lag <= 6; lag++){
+									d+= Math.pow( acf[lag]-acfTheor[lag]*acf[0] , 2);
+								}
+								if (d < deltaMin){
+									deltaMin = d;
+									tiEstimated = ti;
+									teEstimated = te;
+								}
+							}
+						}
+					}
+					System.out.println(date + "\t" + altitude + "\t" + tiEstimated + "\t" + teEstimated);
+//					break;
+				}
+			}
+			System.out.println();
+			break;
+		}
+	}
+
 	private void run(String[] args) {
 
 		project = new ProjectFactory().getProject("d:/data.db3");
@@ -89,12 +150,13 @@ public class MuApplication {
 			System.exit(-1);
 		}
 
-		load(Paths.get("d:/test"));
+		// load(Paths.get("d:/test"));
 
 		getProperties();
 
-		temporal();
-		altitudinal();
+		// temporal();
+		// altitudinal();
+		inverse();
 
 		project.close();
 
