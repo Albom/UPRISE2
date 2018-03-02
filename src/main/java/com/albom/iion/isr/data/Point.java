@@ -65,7 +65,7 @@ public class Point {
 
 	@Override
 	public String toString() {
-		return "[" + date + ", alt=" + alt + ": " + value + "]";
+		return "[" + date + ", alt=" + alt + ", lag=" + lag + ": " + value + "]";
 	}
 
 	/**
