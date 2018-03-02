@@ -14,7 +14,6 @@ import com.albom.iion.isr.processing.CoherentNoiseFinder;
 import com.albom.iion.isr.processing.HeightIntegratorNum;
 import com.albom.iion.isr.processing.TimeIntegratorSlide;
 
-
 public class MuApplication {
 
 	private int start;
@@ -22,13 +21,13 @@ public class MuApplication {
 	private int zenith;
 	private int nH;
 	private int nLag;
-	
+
 	private final String step1 = "step1";
 	private final String step2 = "step2";
 	private final String step3 = "step3";
-	
+
 	private ProjectDB project;
-	
+
 	private void load(Path directory) {
 		project.createTable(step1);
 		ProjectFS projectFS = new MuProjectFS(project, step1);
@@ -38,10 +37,10 @@ public class MuApplication {
 	private void temporal() {
 
 		project.createTable(step2);
-		
+
 		CoherentNoiseFinder finder = new CoherentNoiseFinder(20, 4);
 		TimeIntegratorSlide integrator = new TimeIntegratorSlide(20 * 60, 10 * 60);
-		
+
 		for (int lag = 0; lag < nLag; lag++) {
 
 			for (int h = 0; h < nH; h++) {
@@ -82,7 +81,6 @@ public class MuApplication {
 		}
 	}
 
-
 	private void run(String[] args) {
 
 		project = new ProjectFactory().getProject("d:/data.db3");
@@ -90,22 +88,24 @@ public class MuApplication {
 		if (project == null) {
 			System.exit(-1);
 		}
-		
+
 		load(Paths.get("d:/test"));
-		
-		start = Integer.valueOf(project.getProperty("start"));
-		sampling = Integer.valueOf(project.getProperty("sampling"));
-		zenith = Integer.valueOf(project.getProperty("zenith"));
-		nH = Integer.valueOf(project.getProperty("nh"));
-		nLag = Integer.valueOf(project.getProperty("nlag"));
-		
-		System.out.println(start + "\t" + sampling + "\t" + zenith + "\t" + nH);
-		
+
+		getProperties();
+
 		temporal();
 		altitudinal();
 
 		project.close();
 
+	}
+
+	private void getProperties() {
+		start = Integer.valueOf(project.getProperty("start"));
+		sampling = Integer.valueOf(project.getProperty("sampling"));
+		zenith = Integer.valueOf(project.getProperty("zenith"));
+		nH = Integer.valueOf(project.getProperty("nh"));
+		nLag = Integer.valueOf(project.getProperty("nlag"));
 	}
 
 	public static void main(String[] args) {
