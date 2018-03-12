@@ -3,8 +3,8 @@ package com.albom.application;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 import com.albom.iion.isr.data.Point;
 import com.albom.iion.isr.data.ProjectDB;
@@ -18,6 +18,7 @@ import com.albom.iion.isr.processing.TimeIntegratorSlide;
 import com.albom.iion.isr.processing.mu.Altitude;
 import com.albom.iion.isr.radars.MURadar;
 import com.albom.physics.UnitPrefix;
+import com.albom.utils.Time;
 
 public class MuApplication {
 
@@ -43,12 +44,16 @@ public class MuApplication {
 
 		project.createTable(step2);
 
-		CoherentNoiseFinder finder = new CoherentNoiseFinder(20, 4);
-		TimeIntegratorSlide integrator = new TimeIntegratorSlide(20 * 60, 10 * 60);
+		CoherentNoiseFinder finder = new CoherentNoiseFinder(20, 4.0);
+		TimeIntegratorSlide integrator = new TimeIntegratorSlide(60 * 60, 30 * 60);
 
 		for (int lag = 0; lag < nLag; lag++) {
 
+			System.out.println("lag=" + lag);
+
 			for (int h = 0; h < nH; h++) {
+
+				System.out.println("h=" + h);
 
 				List<Point> points = project.getTimeDependency(step1, h, lag);
 				List<Boolean> labels = finder.find(points);
@@ -69,6 +74,8 @@ public class MuApplication {
 		project.createTable(step3);
 
 		for (int lag = 0; lag < nLag; lag++) {
+
+			System.out.println("lag=" + lag);
 
 			List<LocalDateTime> dates = project.getDates(step2, lag);
 
@@ -98,8 +105,8 @@ public class MuApplication {
 
 		ForwardProblem forward = new ForwardProblem(MURadar.WAVE_LENGTH);
 		double[] acfTheor = new double[7];
-		double deltaTau = UnitPrefix.micro(MURadar.DISTANCE_BETWEEN_PULSES);
-		
+		final double DELTA_TAU = UnitPrefix.micro(MURadar.DISTANCE_BETWEEN_PULSES);
+
 		// System.out.println(Arrays.toString(acfTheor));
 
 		List<LocalDateTime> dates = project.getDates(step3, 1);
@@ -109,36 +116,49 @@ public class MuApplication {
 				if ((altitude > 200) && (altitude < 300)) {
 					List<Point> points = project.getAcf(step3, date, h);
 					double[] acf = acfToArray(points);
-					// System.out.println(Arrays.toString(acf).replaceAll("\\[",
-					// "").replaceAll("]", "").replaceAll(", ", "\t"));
 
-					double tiEstimated = 0, teEstimated = 0;
-					
+					double tiEstimated = 0, teEstimated = 0, kEstimated = 0;
+
 					double deltaMin = Double.MAX_VALUE;
-					for (acf[0] = acf[1]; acf[0] < acf[1] * 1.1; acf[0] *= 1.005) {
-						// System.out.println(Arrays.toString(acf).replaceAll("\\[",
-						// "").replaceAll("]", "").replaceAll(", ", "\t"));
-						for (double ti = 500; ti < 2000; ti += 100) {
-							for (double te = ti; te < 2000; te += 100) {
-								forward.acf(ti, te, deltaTau, acfTheor);
+					for (double k = 0.8; k < 1.2; k += 0.02) {
+						acf[0] = k * acf[1];
+						for (double ti = 500; ti < 2000; ti += 50) {
+							for (double te = ti; te < 2000; te += 50) {
+								forward.acf(ti, te, DELTA_TAU, acfTheor);
 								double d = 0;
-								for (int lag = 1; lag <= 6; lag++){
-									d+= Math.pow( acf[lag]-acfTheor[lag]*acf[0] , 2);
+								for (int lag = 1; lag <= 6; lag++) {
+									d += Math.pow(acf[lag] - acfTheor[lag] * acf[0], 2);
 								}
-								if (d < deltaMin){
+								if (d < deltaMin) {
 									deltaMin = d;
 									tiEstimated = ti;
 									teEstimated = te;
+									kEstimated = k;
 								}
 							}
 						}
 					}
-					System.out.println(date + "\t" + altitude + "\t" + tiEstimated + "\t" + teEstimated);
-//					break;
+					// return;
+					System.out.print(String.format(Locale.US, "%8.5f\t%8.1f\t%5.0f\t%5.0f\t%7.2f\t%7.3E\t\t",
+							Time.toDecimal(date), altitude, tiEstimated, teEstimated, kEstimated, deltaMin));
+					acf[0] = acf[1] * kEstimated;
+					for (int lag = 0; lag <= 6; lag++) {
+						System.out.print(String.format(Locale.US, "%6.3f\t", acf[lag] / acf[0]));
+					}
+					System.out.print("\t");
+
+					forward.acf(tiEstimated, teEstimated, DELTA_TAU, acfTheor);
+					for (int lag = 0; lag <= 6; lag++) {
+						System.out.print(String.format(Locale.US, "%6.3f\t", acfTheor[lag]));
+					}
+
+					System.out.println();
+
+					// break;
 				}
 			}
 			System.out.println();
-			break;
+			// break;
 		}
 	}
 
@@ -150,12 +170,12 @@ public class MuApplication {
 			System.exit(-1);
 		}
 
-		// load(Paths.get("d:/test"));
+		load(Paths.get("d:/test"));
 
 		getProperties();
 
-		// temporal();
-		// altitudinal();
+		temporal();
+		altitudinal();
 		inverse();
 
 		project.close();
