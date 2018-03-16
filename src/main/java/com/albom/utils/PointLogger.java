@@ -6,20 +6,20 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 import com.albom.iion.isr.data.Point;
 
 public abstract class PointLogger {
 
-	public static void log(String fileName, ArrayList<Point> data) {
+	public static void log(String fileName, List<Point> data) {
 
 		log(fileName, data, null);
 
 	}
 
-	public static void log(String fileName, ArrayList<Point> data, ArrayList<Boolean> labels) {
+	public static void log(String fileName, List<Point> data, List<Boolean> labels) {
 
 		Path file = Paths.get(fileName);
 		try (BufferedWriter out = Files.newBufferedWriter(file, Charset.forName("US-ASCII"))) {
