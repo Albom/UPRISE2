@@ -18,9 +18,9 @@ abstract public class DataBuffer {
 	 */
 	public static int getWordLittleEndian(byte[] buffer, int offset) {
 		int b0, b1;
-		b0 = buffer[offset + 1] >= 0 ? buffer[offset + 1] : 256 + buffer[offset + 1];
-		b1 = buffer[offset] >= 0 ? buffer[offset] : 255 - buffer[offset];
-		return b1 + b0 * 256;
+		b0 = buffer[offset] >= 0 ? buffer[offset] : 256 + buffer[offset];
+		b1 = buffer[offset + 1] >= 0 ? buffer[offset + 1] : 256 + buffer[offset + 1];
+		return (short)(b0 + b1 * 256);
 	}
 
 	/**
