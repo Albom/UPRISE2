@@ -1,5 +1,7 @@
 package com.albom.iion.isr.processing.mu;
 
+import com.albom.iion.isr.data.mu.MuDirection;
+import com.albom.iion.isr.data.mu.MuHeader;
 import com.albom.physics.Constants;
 
 public abstract class Altitude {
@@ -14,4 +16,8 @@ public abstract class Altitude {
 		return Constants.SPEED_OF_LIGHT * (start + sampling * h) * 1e-6 / 2.0 * Math.cos(Math.toRadians(zenith)) / 1000.0;
 	}
 
+	public static double getAbsolute(int h, MuHeader header) {
+		return Constants.SPEED_OF_LIGHT * (header.getJstart() + header.getJsint() * h) * 1e-6 / 2.0 * Math.cos(Math.toRadians(new MuDirection(header.getIbeam()[0]).getZenith())) / 1000.0;
+	}
+	
 }
