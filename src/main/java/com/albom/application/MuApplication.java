@@ -115,7 +115,7 @@ public class MuApplication {
 		for (LocalDateTime date : dates) {
 			System.out.println(date);
 			for (int h = 0; h < nH; h++) {
-				double altitude = Altitude.getAbsolute(h, start, sampling, zenith);
+				double altitude = Altitude.getAbsolute(h, 1333, sampling, zenith);
 				// if ((altitude > 268) && (altitude < 272)) {
 				if (altitude < 300) {
 					List<Point> points = project.getAcf(step3, date, h);
@@ -162,7 +162,7 @@ public class MuApplication {
 		}
 		
 		try {
-			java.nio.file.Files.write(Paths.get("e:/MU_2017_09/parameters.txt"), buffer.toString().getBytes("utf-8"),
+			java.nio.file.Files.write(Paths.get("e:/MU_2017_12/parameters.txt"), buffer.toString().getBytes("utf-8"),
 					StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -198,7 +198,7 @@ public class MuApplication {
 
 		}
 		try {
-			java.nio.file.Files.write(Paths.get("e:/MU_2017_09/snr.txt"), buffer.toString().getBytes("utf-8"),
+			java.nio.file.Files.write(Paths.get("e:/MU_2017_12/snr.txt"), buffer.toString().getBytes("utf-8"),
 					StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -207,40 +207,43 @@ public class MuApplication {
 
 	private void run(String[] args) {
 
-		project = new ProjectFactory().getProject("e:/MU_2017_09.db3");
+	
+		project = new ProjectFactory().getProject("e:/MU_2017_12.db3");
 
 		if (project == null) {
+			System.out.println("Error opening project.");
 			System.exit(-1);
 		}
-		
 
+//		load(Paths.get("h:/Data/MU/MU20171225"));
+		
 		
 //
 //		 load(Paths.get("h:/Data/MU/MI2972"));
 //		 load(Paths.get("h:/Data/MU/MI2973"));
 //		 load(Paths.get("h:/Data/MU/MI2974"));
 //
-//		getProperties();
+		getProperties();
 //		 System.out.println(start + "\n" + sampling + "\n" + zenith + "\n" +
 //		 nH + "\n" + nLag + "\n");
 //
 //		 temporal();
 //
 //		 List<Point> points = project.getTimeDependency(step1, 100, 0);
-//		 PointLogger.log("e:/MU_2017_09/before.txt", points);
+//		 PointLogger.log("e:/MU_2017_12/before.txt", points);
 //		 points = project.getTimeDependency(step2, 100, 0);
-//		 PointLogger.log("e:/MU_2017_09/after.txt", points);
+//		 PointLogger.log("e:/MU_2017_12/after.txt", points);
 //
 //		 altitudinal();
 //		
 //		 List<LocalDateTime> dates = project.getDates(step2, 0);
-////		 List<Point> points = project.getHeightDependency(step2,
-////		 dates.get(20), 0);
+//		 List<Point> points = project.getHeightDependency(step2,
+//		 dates.get(20), 0);
 //		 PointLogger.log("e:/MU_2017_09/before.txt", points);
 //		 points = project.getHeightDependency(step3, dates.get(20), 0);
 //		 PointLogger.log("e:/MU_2017_09/after.txt", points);
-//
-//		 inverse();
+
+		 inverse();
 //		snr();
 
 		project.close();

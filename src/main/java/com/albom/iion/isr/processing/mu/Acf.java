@@ -2,6 +2,7 @@ package com.albom.iion.isr.processing.mu;
 
 import java.time.LocalDateTime;
 import java.util.LinkedList;
+import java.util.List;
 
 import com.albom.iion.isr.data.Point;
 import com.albom.iion.isr.data.mu.MuHeader;
@@ -15,7 +16,7 @@ public class Acf {
 	private Acf() {
 	}
 
-	private static LinkedList<Point> calcPower(MuSession s) {
+	private static List<Point> calcPower(MuSession s) {
 		LinkedList<Point> points = new LinkedList<>();
 		MuHeader head = s.getHead();
 		LocalDateTime date = head.getRecsta();
@@ -40,7 +41,7 @@ public class Acf {
 		return points;
 	}
 
-	private static LinkedList<Point> calcAcf(MuSession s) {
+	private static List<Point> calcAcf(MuSession s) {
 		LinkedList<Point> points = new LinkedList<>();
 		MuHeader head = s.getHead();
 		LocalDateTime date = head.getRecsta();
@@ -91,7 +92,7 @@ public class Acf {
 		return points;
 	}
 
-	public static LinkedList<Point> calc(MuSession s) {
+	public static List<Point> calc(MuSession s) {
 
 		int pattern = s.getHead().getMpulse().getPattern();
 		if (pattern == MuPulse.ONE_PULSE) {
