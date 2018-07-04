@@ -82,7 +82,7 @@ public class Point {
 		this.lag = lag;
 	}
 
-	public static List<Double> getValues(ArrayList<Point> points){
+	public static List<Double> getValues(List<Point> points){
 		return points.stream()
 				.map(Point::getValue)
 				.collect(Collectors.toList());
