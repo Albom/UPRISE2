@@ -8,6 +8,8 @@ public class Point {
 	private LocalDateTime date;
 	private int alt;
 	private int lag;
+	
+	// TODO replace double to Complex from Apache Commons
 	private double value;
 
 	public Point(LocalDateTime date, int alt, int lag, double value) {
