@@ -1,6 +1,7 @@
 package com.albom.iion.isr.processing.mu;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import com.albom.iion.isr.processing.ForwardProblem;
 import com.albom.iion.isr.radars.MURadar;
@@ -8,16 +9,26 @@ import com.albom.physics.UnitPrefix;
 
 public class AcfLibrary {
 
-	private class Offset extends HashMap<Long, Integer> {
-		private static final long serialVersionUID = 1L;
+	private class Offsets {
+
+		Map<Long, Integer> map = new HashMap<Long, Integer>();
+
+		private void put(int ti, int te, Integer offset) {
+			map.put((long) ti << 32 | (long) te, offset);
+		}
+
+		private Integer get(int ti, int te) {
+			return map.get((long) ti << 32 | (long) te);
+		}
+
 	}
-	
+
 	private final int LENGTH = 7;
 	private int num = 0;
 
 	private double[] acfs = null;
 
-	Offset offsets = new Offset();
+	Offsets offsets = new Offsets();
 
 	public AcfLibrary(int tMin, int tMax, int step) {
 
@@ -35,7 +46,7 @@ public class AcfLibrary {
 				for (int lag = 0; lag < LENGTH; lag++) {
 					acfs[lag + pos * LENGTH] = acf[lag];
 				}
-				offsets.put((long) ti << 32 | (long) te, pos * LENGTH);
+				offsets.put(ti, te, pos * LENGTH);
 				pos++;
 			}
 		}
@@ -58,7 +69,7 @@ public class AcfLibrary {
 	}
 
 	public boolean getAcf(int ti, int te, double acf[]) {
-		Integer offset = offsets.get((long) ti << 32 | (long) te);
+		Integer offset = offsets.get(ti << 32, te);
 		if (offset == null) {
 			return false;
 		}
