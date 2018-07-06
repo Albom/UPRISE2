@@ -1,12 +1,5 @@
 package com.albom.application;
 
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
 
 import com.albom.iion.isr.data.Point;
@@ -15,9 +8,7 @@ import com.albom.iion.isr.data.mu.MuRawData;
 import com.albom.iion.isr.data.mu.MuSession;
 import com.albom.iion.isr.data.mu.MuSessionFS;
 import com.albom.iion.isr.processing.mu.Acf;
-import com.albom.iion.isr.processing.mu.Altitude;
 import com.albom.utils.Directory;
-import com.albom.utils.PointLogger;
 
 public class MuCorrTestApplication {
 

@@ -18,7 +18,6 @@ import com.albom.iion.isr.processing.HeightIntegratorNum;
 import com.albom.iion.isr.processing.TimeIntegratorSlide;
 import com.albom.iion.isr.processing.mu.AcfLibrary;
 import com.albom.iion.isr.processing.mu.Altitude;
-import com.albom.utils.PointLogger;
 
 public class MuApplication {
 
@@ -60,13 +59,7 @@ public class MuApplication {
 
 				List<Boolean> labels = finder.find(points);
 				points = integrator.integrate(points, labels);
-
-				project.begin();
-				for (Point point : points) {
-					project.insert(step2, point);
-				}
-				project.commit();
-
+				project.insert(step2, points);
 			}
 		}
 	}
@@ -74,6 +67,7 @@ public class MuApplication {
 	private void altitudinal() {
 
 		project.createTable(step3);
+		HeightIntegratorNum heigthIntegrator = new HeightIntegratorNum(11);
 
 		for (int lag = 0; lag < nLag; lag++) {
 
@@ -81,16 +75,10 @@ public class MuApplication {
 
 			List<LocalDateTime> dates = project.getDates(step2, lag);
 
-			HeightIntegratorNum heigthIntegrator = new HeightIntegratorNum(11);
-
 			for (LocalDateTime d : dates) {
 				List<Point> p = project.getHeightDependency(step2, d, lag);
 				List<Point> points = heigthIntegrator.integrate(p);
-				project.begin();
-				for (Point point : points) {
-					project.insert(step3, point);
-				}
-				project.commit();
+				project.insert(step3, points);
 			}
 		}
 	}
@@ -143,8 +131,8 @@ public class MuApplication {
 							}
 						}
 					}
-					buffer.append(String.format(Locale.US, "\"%10s\";%8.1f;%5d;%5d;%7.2f;%7.3E;",
-							date.toString(), altitude, tiEstimated, teEstimated, kEstimated, deltaMin));
+					buffer.append(String.format(Locale.US, "\"%10s\";%8.1f;%5d;%5d;%7.2f;%7.3E;", date.toString(),
+							altitude, tiEstimated, teEstimated, kEstimated, deltaMin));
 					acf[0] = acf[1] * kEstimated;
 					for (int lag = 0; lag <= 6; lag++) {
 						buffer.append(String.format(Locale.US, "%8.4f;", acf[lag]));
@@ -160,14 +148,14 @@ public class MuApplication {
 			}
 			buffer.append("\n");
 		}
-		
+
 		try {
 			java.nio.file.Files.write(Paths.get("e:/MU_2017_12/parameters.txt"), buffer.toString().getBytes("utf-8"),
 					StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 	}
 
 	private void snr() {
@@ -180,9 +168,9 @@ public class MuApplication {
 
 			double pN = Double.MAX_VALUE;
 			for (Point p : points) {
-					if (p.getValue() < pN) {
-						pN = p.getValue();
-					}
+				if (p.getValue() < pN) {
+					pN = p.getValue();
+				}
 			}
 
 			int i = 0;
@@ -207,7 +195,6 @@ public class MuApplication {
 
 	private void run(String[] args) {
 
-	
 		project = new ProjectFactory().getProject("e:/MU_2017_12.db3");
 
 		if (project == null) {
@@ -215,36 +202,16 @@ public class MuApplication {
 			System.exit(-1);
 		}
 
-//		load(Paths.get("h:/Data/MU/MU20171225"));
-		
-		
-//
-//		 load(Paths.get("h:/Data/MU/MI2972"));
-//		 load(Paths.get("h:/Data/MU/MI2973"));
-//		 load(Paths.get("h:/Data/MU/MI2974"));
-//
-		getProperties();
-//		 System.out.println(start + "\n" + sampling + "\n" + zenith + "\n" +
-//		 nH + "\n" + nLag + "\n");
-//
-//		 temporal();
-//
-//		 List<Point> points = project.getTimeDependency(step1, 100, 0);
-//		 PointLogger.log("e:/MU_2017_12/before.txt", points);
-//		 points = project.getTimeDependency(step2, 100, 0);
-//		 PointLogger.log("e:/MU_2017_12/after.txt", points);
-//
-//		 altitudinal();
-//		
-//		 List<LocalDateTime> dates = project.getDates(step2, 0);
-//		 List<Point> points = project.getHeightDependency(step2,
-//		 dates.get(20), 0);
-//		 PointLogger.log("e:/MU_2017_09/before.txt", points);
-//		 points = project.getHeightDependency(step3, dates.get(20), 0);
-//		 PointLogger.log("e:/MU_2017_09/after.txt", points);
+		load(Paths.get("h:/Data/MU/MI2972"));
+		load(Paths.get("h:/Data/MU/MI2973"));
+		load(Paths.get("h:/Data/MU/MI2974"));
 
-		 inverse();
-//		snr();
+		getProperties();
+
+		temporal();
+		altitudinal();
+		inverse();
+		snr();
 
 		project.close();
 

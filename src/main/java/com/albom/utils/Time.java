@@ -2,9 +2,12 @@ package com.albom.utils;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 
 public abstract class Time {
+	
+	public final static DateTimeFormatter DATE_TIME_FORMAT = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 
 	public static double toDecimal(String h, String m, String s) {
 		return toDecimal(Integer.valueOf(h), Integer.valueOf(m), Integer.valueOf(s));
@@ -16,13 +19,21 @@ public abstract class Time {
 		int s = date.getSecond();
 		return toDecimal(h, m, s);
 	}
-	
+
 	public static double toDecimal(int h, int m, int s) {
 		return (double) (h) + (double) (m) / 60.0 + (double) (s) / 3600.0;
 	}
 
 	public static double reduce(double hour) {
 		return hour - 24 * (((int) hour) / 24);
+	}
+
+	public static void linear(double[] times) {
+		for (int t = 1; t < times.length; t++) {
+			while (times[t] < times[t - 1]) {
+				times[t] += 24.0;
+			}
+		}
 	}
 
 	public static double hours(double hour) {
@@ -47,15 +58,15 @@ public abstract class Time {
 		ZoneId zoneId = ZoneId.systemDefault();
 		return end.atZone(zoneId).toEpochSecond() - start.atZone(zoneId).toEpochSecond();
 	}
-	
-	public static LocalDateTime getStartHour(LocalDateTime oldTime){
+
+	public static LocalDateTime getStartHour(LocalDateTime oldTime) {
 		LocalDateTime newTime = LocalDateTime.from(oldTime);
 		newTime = newTime.truncatedTo(ChronoUnit.HOURS);
 		return newTime;
 	}
-	
-	public static LocalDateTime getEndHour(LocalDateTime oldTime){
+
+	public static LocalDateTime getEndHour(LocalDateTime oldTime) {
 		return getStartHour(oldTime).plusHours(1);
 	}
-	
+
 }

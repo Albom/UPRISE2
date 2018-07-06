@@ -23,8 +23,8 @@ public class ProjectDB {
 	private void createProperties() {
 		try {
 			Statement statement = connection.createStatement();
-			statement
-					.execute("CREATE TABLE IF NOT EXISTS " + properties + " (name VARCHAR PRIMARY KEY, value VARCHAR);");
+			statement.execute(
+					"CREATE TABLE IF NOT EXISTS " + properties + " (name VARCHAR PRIMARY KEY, value VARCHAR);");
 			statement.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -91,17 +91,17 @@ public class ProjectDB {
 
 	}
 
-	public void insert(String table, Point data) {
+	public void insert(String table, Point point) {
 
 		try {
 
 			PreparedStatement statement = connection
 					.prepareStatement("INSERT INTO " + table + " (time, alt, lag, value) VALUES (?, ?, ?, ?);");
 
-			statement.setTimestamp(1, Timestamp.valueOf(data.getDate()));
-			statement.setInt(2, data.getAlt());
-			statement.setInt(3, data.getLag());
-			statement.setDouble(4, data.getValue());
+			statement.setTimestamp(1, Timestamp.valueOf(point.getDate()));
+			statement.setInt(2, point.getAlt());
+			statement.setInt(3, point.getLag());
+			statement.setDouble(4, point.getValue());
 
 			statement.execute();
 			statement.close();
@@ -110,6 +110,14 @@ public class ProjectDB {
 			e.printStackTrace();
 		}
 
+	}
+
+	public void insert(String table, List<Point> points) {
+		begin();
+		for (Point point : points) {
+			insert(table, point);
+		}
+		commit();
 	}
 
 	public void close() {
@@ -224,5 +232,21 @@ public class ProjectDB {
 		}
 
 		return points;
+	}
+
+	public List<Integer> getLags(String table) {
+		List<Integer> lags = new ArrayList<>();
+		try {
+			PreparedStatement statement = connection
+					.prepareStatement("SELECT DISTINCT lag FROM " + table + " ORDER BY lag;");
+			ResultSet result = statement.executeQuery();
+			while (result.next()) {
+				int lag = result.getInt(1);
+				lags.add(lag);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return lags;
 	}
 }
