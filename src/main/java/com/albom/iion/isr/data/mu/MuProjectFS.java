@@ -45,19 +45,17 @@ public class MuProjectFS extends ProjectFS {
 		List<String> list = Directory.list(dir.toString());
 		readProperties(list.get(0));
 		for (String name : list) {
-			System.out.println(name); 
+			System.out.println(name);
 			int i = 0;
 			MuSession s = null;
-			project.begin();
+
 			while ((s = MuSessionFS.load(name, i)) != null) {
 				List<Point> points = Acf.calc(s);
-				for (Point p : points) {
-					project.insert(table, p);
-					result++;
-				}
+				project.insert(table, points);
+				result += points.size();
 				i++;
 			}
-			project.commit(); 
+
 		}
 		return result;
 	}

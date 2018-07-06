@@ -22,6 +22,8 @@ public class IvApplication {
 	private final String step3 = "step3";
 	private final int[] LAGS = { 0, 7, 8, 9, 10, 11, 12 };
 
+	private int nH;
+
 	private void run() {
 
 		project = new ProjectFactory().getProject("e:/IV_2017_12_26.db3");
@@ -32,6 +34,8 @@ public class IvApplication {
 		}
 
 		load(Paths.get("h:/Data/26-12-2017/1/"));
+
+		getProperties();
 
 		temporal();
 
@@ -47,6 +51,7 @@ public class IvApplication {
 
 	private void temporal() {
 		project.createTable(step2);
+
 		CoherentNoiseFinder finder = new CoherentNoiseFinder(15, 4.5);
 		TimeIntegratorSlide integrator = new TimeIntegratorSlide(20 * 60, 1 * 60);
 
@@ -54,7 +59,7 @@ public class IvApplication {
 
 			System.out.println("lag=" + lag);
 
-			for (int h = 100; h < 300; h++) {
+			for (int h = 0; h < nH; h++) {
 
 				System.out.println("h=" + h);
 
@@ -84,6 +89,10 @@ public class IvApplication {
 
 		}
 
+	}
+
+	private void getProperties() {
+		nH = Integer.valueOf(project.getProperty("nh"));
 	}
 
 	public static void main(String[] args) {
