@@ -31,26 +31,11 @@ public class IvApplication {
 			System.exit(-1);
 		}
 
-		// load(Paths.get("h:/Data/26-12-2017/1/"));
+		load(Paths.get("h:/Data/26-12-2017/1/"));
 
-		// temporal();
+		temporal();
 
-//		altitudinal();
-//
-//		List<LocalDateTime> dates = project.getDates(step3, 0);
-//		List<Point> points = project.getHeightDependency(step3, dates.get(5), 0);
-//		Point.log(Paths.get("e:/test.txt"), points);
-
-		// List<Point> points = project.getTimeDependency(step1, 150, 0);
-
-		//
-		// for (int h = 50; h < 500; h++) {
-		// List<Point> points = project.getAcf(step2, dates.get(0), h);
-		// for (Point p : points) {
-		// System.out.print(p.getValue() + "\t");
-		// }
-		// System.out.println();
-		// }
+		altitudinal();
 
 	}
 
@@ -77,13 +62,7 @@ public class IvApplication {
 
 				List<Boolean> labels = finder.find(points);
 				points = integrator.integrate(points, labels);
-
-				project.begin();
-				for (Point point : points) {
-					project.insert(step2, point);
-				}
-				project.commit();
-
+				project.insert(step2, points);
 			}
 		}
 
@@ -93,10 +72,10 @@ public class IvApplication {
 		project.createTable(step3);
 		HeightIntegratorNum heigthIntegrator = new HeightIntegratorNum(5);
 		for (int lag : LAGS) {
+
 			System.out.println("lag=" + lag);
 
 			List<LocalDateTime> dates = project.getDates(step2, lag);
-
 			for (LocalDateTime d : dates) {
 				List<Point> p = project.getHeightDependency(step2, d, lag);
 				List<Point> points = heigthIntegrator.integrate(p);
