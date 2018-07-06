@@ -1,4 +1,4 @@
-package com.albom.utils;
+package com.albom.util;
 
 import java.io.BufferedWriter;
 import java.io.IOException;

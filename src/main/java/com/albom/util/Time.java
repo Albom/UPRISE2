@@ -1,4 +1,4 @@
-package com.albom.utils;
+package com.albom.util;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;

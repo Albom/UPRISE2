@@ -9,7 +9,7 @@ import com.albom.iion.isr.data.ProjectFS;
 import com.albom.iion.isr.data.mu.MuSession;
 import com.albom.iion.isr.data.mu.MuSessionFS;
 import com.albom.iion.isr.processing.mu.Acf;
-import com.albom.utils.Directory;
+import com.albom.util.Directory;
 
 public class MuProjectFS extends ProjectFS {
 

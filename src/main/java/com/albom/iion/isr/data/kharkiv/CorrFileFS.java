@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDateTime;
 
-import com.albom.utils.DataBuffer;
+import com.albom.util.DataBuffer;
 
 public abstract class CorrFileFS {
 

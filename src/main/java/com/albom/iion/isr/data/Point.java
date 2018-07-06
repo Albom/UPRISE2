@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
 
-import com.albom.utils.Time;
+import com.albom.util.Time;
 
 public class Point {
 	private LocalDateTime date;
