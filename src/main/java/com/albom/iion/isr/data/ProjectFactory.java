@@ -14,6 +14,7 @@ public class ProjectFactory {
 		}
 	}
 
+	// TODO change String to Path
 	public ProjectDB getProject(String fileName) {
 
 		Connection connection = null;

@@ -40,23 +40,41 @@ public class TimeIntegratorSlide {
 		int lag = p.getLag();
 		int alt = p.getAlt();
 
+//		while (Time.diff(current, end) > 0) {
+//			LocalDateTime currentEnd = current.plusSeconds(interval);
+//			int c = 0;
+//			double value = 0;
+//			for (int i = 0; i < length; i++) {
+//				LocalDateTime time = data.get(i).getDate();
+//				if ((Time.diff(current, time) >= 0) && (Time.diff(time, currentEnd) > 0) && (!labels.get(i))) {
+//					value += data.get(i).getValue();
+//					c++;
+//				}
+//			}
+//			if (c != 0) {
+//				result.add(new Point(current.plusSeconds(interval / 2), alt, lag, value / c));
+//			}
+//			current = current.plusSeconds(step);
+//		}
+
 		while (Time.diff(current, end) > 0) {
-			LocalDateTime currentEnd = current.plusSeconds(interval);
+			LocalDateTime intervalStart = current.plusSeconds(-interval/2);
+			LocalDateTime intervalEnd = current.plusSeconds(interval/2);
 			int c = 0;
 			double value = 0;
 			for (int i = 0; i < length; i++) {
 				LocalDateTime time = data.get(i).getDate();
-				if ((Time.diff(current, time) >= 0) && (Time.diff(time, currentEnd) > 0) && (!labels.get(i))) {
+				if ((Time.diff(start, time) >= 0) && (Time.diff(intervalStart, time) >= 0) && (Time.diff(time, intervalEnd) > 0) && (!labels.get(i))) {
 					value += data.get(i).getValue();
 					c++;
 				}
 			}
-			if (c != 0) {
-				result.add(new Point(current.plusSeconds(interval / 2), alt, lag, value / c));
+			if (c > 0) {
+				result.add(new Point(current, alt, lag, value / c));
 			}
 			current = current.plusSeconds(step);
-		}
-
+		}		
+		
 		return result;
 	}
 

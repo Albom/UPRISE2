@@ -56,10 +56,12 @@ public class ForwardProblem {
 	}
 
 	public ForwardProblem(double m1, double m2, double m3) {
+		this(KharkivRadar.WAVE_LENGTH, m1, m2, m3);
+		/*
 		this.waveLength = KharkivRadar.WAVE_LENGTH;
 		this.m1 = m1;
 		this.m2 = m2;
-		this.m3 = m3;
+		this.m3 = m3;*/
 	}
 
 	private static double[] calcPhi() {

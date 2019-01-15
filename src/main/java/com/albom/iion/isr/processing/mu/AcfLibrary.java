@@ -54,6 +54,7 @@ public class AcfLibrary {
 	}
 
 	private void calcNum(int tMin, int tMax, int step) {
+		num = 0;
 		for (int ti = tMin; ti <= tMax; ti += step) {
 			for (int te = ti; te <= tMax; te += step) {
 				num++;

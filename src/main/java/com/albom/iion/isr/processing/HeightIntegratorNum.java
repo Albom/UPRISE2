@@ -32,7 +32,7 @@ public class HeightIntegratorNum {
 				}
 			}
 			value /= c;
-			result.add(new Point(date, h, lag, value));
+			result.add(new Point(date, data.get(h).getAlt(), lag, value));
 		}
 		return result;
 	}
