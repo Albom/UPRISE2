@@ -1,5 +1,6 @@
 package com.albom.iion.isr.data.mu;
 
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Arrays;
@@ -195,7 +196,7 @@ public class MuHeader {
 	/**
 	 * HP parameter-file name (<b>8</b> bytes)
 	 */
-	private String hpnam;
+	private byte[] hpnam;
 
 	private int nomode;
 
@@ -787,11 +788,11 @@ public class MuHeader {
 	}
 
 	public String getHpnam() {
-		return hpnam;
+		return new String(hpnam, StandardCharsets.US_ASCII);
 	}
 
 	public void setHpnam(String hpnam) {
-		this.hpnam = hpnam;
+		this.hpnam = hpnam.getBytes(StandardCharsets.UTF_8);
 	}
 
 	public int getNomode() {
@@ -1386,7 +1387,7 @@ public class MuHeader {
 		builder.append("lsubp  = ").append(lsubp).append("\n");
 		builder.append("nsubp  = ").append(nsubp).append("\n");
 		builder.append("mscan  = ").append(mscan).append("\n");
-		builder.append("hpnam  = ").append(hpnam).append("\n");
+		builder.append("hpnam  = ").append(getHpnam().trim()).append("\n");
 		builder.append("nomode = ").append(nomode).append("\n");
 		builder.append("nehead = ").append(nehead).append("\n");
 		builder.append("nicohm = ").append(Arrays.toString(nicohm).replaceAll("\\[", "").replaceAll("\\]", "")).append("\n");
