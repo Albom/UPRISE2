@@ -4,9 +4,10 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 
 public abstract class Time {
-	
+
 	public final static DateTimeFormatter DATE_TIME_FORMAT = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 
 	public static double toDecimal(String h, String m, String s) {
@@ -69,4 +70,16 @@ public abstract class Time {
 		return getStartHour(oldTime).plusHours(1);
 	}
 
+	public static LocalDateTime nearest(LocalDateTime time, List<LocalDateTime> times) {
+		double delta = Double.MAX_VALUE;
+		LocalDateTime result = null;
+		for (LocalDateTime t : times) {
+			double deltaCurrent = Math.abs(diff(time, t));
+			if (deltaCurrent < delta) {
+				delta = deltaCurrent;
+				result = t;
+			}
+		}
+		return result;
+	}
 }
